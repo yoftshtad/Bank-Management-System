@@ -212,38 +212,47 @@ int main()
 
     do
     {
-        // Updated Menu
         cout << "\n1. Add Account\n";
         cout << "2. Deposit\n";
         cout << "3. Withdraw\n";
         cout << "4. Show All Accounts\n";
-        cout << "5. Show High-Value Accounts (> $1000)\n"; // New Option
-        cout << "6. Count High-Value Accounts\n";          // New Option
-        cout << "7. Exit\n";                               // Exit is now 7
+        cout << "5. Show High-Value Accounts (> $1000)\n";
+        cout << "6. Count High-Value Accounts\n";
+        cout << "7. Exit\n";
         cout << "Choice: ";
         cin >> ch;
 
-        // Updated Controller
-        if (ch == 1)
-            addAccount(count);
-        else if (ch == 2)
-            deposit();
-        else if (ch == 3)
-            withdraw();
-        else if (ch == 4)
-            show();
-        else if (ch == 5)
-            showHighValueAccounts(); // Call for new feature 1
-        else if (ch == 6)
+        switch (ch)
         {
-            // Call for new feature 2
-            int highValueCount = countHighValueRecursive(0); // Start recursion at index 0
-            cout << "\nTotal number of accounts with balance > $1000: " << highValueCount << "\n";
-        }
-        else if (ch != 7) // Check for new exit number
+        case 1:
+            addAccount(count);
+            break;
+        case 2:
+            deposit();
+            break;
+        case 3:
+            withdraw();
+            break;
+        case 4:
+            show();
+            break;
+        case 5:
+            showHighValueAccounts();
+            break;
+        case 6:
+            {
+                int highValueCount = countHighValueRecursive(0);
+                cout << "\nTotal number of accounts with balance > $1000: " << highValueCount << "\n";
+            }
+            break;
+        case 7:
+            cout << "Exiting...\n";
+            break;
+        default:
             cout << "Wrong choice.\n";
+        }
 
-    } while (ch != 7); // Check for new exit number
+    } while (ch != 7);
 
     return 0;
 }
