@@ -51,7 +51,6 @@ void addAccount(int &c)
     cout << "Initial deposit: ";
     cin >> amount;
     
-    // Added a check for negative deposit based on our previous discussion
     if (amount < 0) {
         cout << "Initial deposit cannot be negative. Account not created.\n";
         return;
@@ -143,9 +142,6 @@ void show()
     }
 }
 
-// ======================================================
-// ==               NEW FEATURE 1                      ==
-// ======================================================
 /**
  * @brief Displays only accounts with a balance greater than 1000.
  */
@@ -172,10 +168,6 @@ void showHighValueAccounts()
     }
     cout << "--------------------------------------\n";
 }
-
-// ======================================================
-// ==               NEW FEATURE 2                      ==
-// ======================================================
 /**
  * @brief Recursively counts how many accounts have a balance > 1000.
  * @param index The current position in the array to check.
@@ -183,7 +175,6 @@ void showHighValueAccounts()
  */
 int countHighValueRecursive(int index)
 {
-    // Base Case: If we are past the end of the list of accounts, there are 0.
     if (index >= count)
     {
         return 0;
