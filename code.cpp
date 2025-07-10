@@ -6,6 +6,7 @@ using namespace std;
 
 const int acc_limit = 50;
 
+// Global variables remain the same
 int accNums[acc_limit];
 float balances[acc_limit];
 string names[acc_limit];
@@ -43,12 +44,18 @@ void addAccount(int &c)
         return;
     }
 
-    cin.ignore(); // clear newline before getline
+    cin.ignore(); 
     cout << "Name: ";
-    getline(cin, name); // supports full name input
+    getline(cin, name);
 
     cout << "Initial deposit: ";
     cin >> amount;
+    
+    // Added a check for negative deposit based on our previous discussion
+    if (amount < 0) {
+        cout << "Initial deposit cannot be negative. Account not created.\n";
+        return;
+    }
 
     accNums[c] = num;
     names[c] = name;
@@ -77,6 +84,11 @@ void deposit()
 
     cout << "Amount: ";
     cin >> amount;
+    
+    if (amount <= 0) {
+        cout << "Deposit must be a positive amount.\n";
+        return;
+    }
 
     *p += amount;
     note[i] = "Deposit made.";
@@ -99,6 +111,11 @@ void withdraw()
 
     cout << "Amount: ";
     cin >> amount;
+    
+    if (amount <= 0) {
+        cout << "Withdrawal must be a positive amount.\n";
+        return;
+    }
 
     if (amount > balances[i])
     {
@@ -113,6 +130,10 @@ void withdraw()
 
 void show()
 {
+    if (count == 0) {
+        cout << "\nNo accounts to show.\n";
+        return;
+    }
     for (int i = 0; i < count; i++)
     {
         cout << "\nAccount: " << accNums[i] << "\n";
@@ -122,20 +143,87 @@ void show()
     }
 }
 
+// ======================================================
+// ==               NEW FEATURE 1                      ==
+// ======================================================
+/**
+ * @brief Displays only accounts with a balance greater than 1000.
+ */
+void showHighValueAccounts()
+{
+    cout << "\n--- Accounts with Balance > $1000 ---\n";
+    int foundCount = 0; // To track if we find any matching accounts
+
+    for (int i = 0; i < count; i++)
+    {
+        if (balances[i] > 1000)
+        {
+            cout << "\nAccount: " << accNums[i] << "\n";
+            cout << "Name: " << names[i] << "\n";
+            cout << "Balance: " << balances[i] << "\n";
+            cout << "Note: " << note[i] << "\n";
+            foundCount++;
+        }
+    }
+
+    if (foundCount == 0)
+    {
+        cout << "No accounts found with a balance over $1000.\n";
+    }
+    cout << "--------------------------------------\n";
+}
+
+// ======================================================
+// ==               NEW FEATURE 2                      ==
+// ======================================================
+/**
+ * @brief Recursively counts how many accounts have a balance > 1000.
+ * @param index The current position in the array to check.
+ * @return The total count of high-value accounts from this index onwards.
+ */
+int countHighValueRecursive(int index)
+{
+    // Base Case: If we are past the end of the list of accounts, there are 0.
+    if (index >= count)
+    {
+        return 0;
+    }
+
+    // Recursive Step:
+    // 1. Ask for the count from the REST of the list (from the next index onwards).
+    int countFromRestOfTheList = countHighValueRecursive(index + 1);
+
+    // 2. Check the CURRENT account. If it's a high-value one, add 1 to the count.
+    if (balances[index] > 1000)
+    {
+        return 1 + countFromRestOfTheList;
+    }
+    else
+    {
+        // Otherwise, the count is just whatever the rest of the list had.
+        return countFromRestOfTheList;
+    }
+}
+
+
 int main()
 {
     int ch;
 
     do
     {
+        // Updated Menu
         cout << "\n1. Add Account\n";
         cout << "2. Deposit\n";
         cout << "3. Withdraw\n";
         cout << "4. Show All Accounts\n";
-        cout << "5. Exit\n";
+        cout << "5. Show High-Value Accounts (> $1000)\n"; // New Option
+        cout << "6. Count High-Value Accounts\n";          // New Option
+        cout << "7. Exit\n";                               // Exit is now 7
         cout << "Choice: ";
         cin >> ch;
 
+        // Updated Controller
         if (ch == 1)
             addAccount(count);
         else if (ch == 2)
@@ -144,10 +232,18 @@ int main()
             withdraw();
         else if (ch == 4)
             show();
-        else if (ch != 5)
+        else if (ch == 5)
+            showHighValueAccounts(); // Call for new feature 1
+        else if (ch == 6)
+        {
+            // Call for new feature 2
+            int highValueCount = countHighValueRecursive(0); // Start recursion at index 0
+            cout << "\nTotal number of accounts with balance > $1000: " << highValueCount << "\n";
+        }
+        else if (ch != 7) // Check for new exit number
             cout << "Wrong choice.\n";
 
-    } while (ch != 5);
+    } while (ch != 7); // Check for new exit number
 
     return 0;
 }
